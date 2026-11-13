@@ -1,13 +1,14 @@
-package com.ashith.insurance.discovery_server;
+package com.ashith.insurance.auth_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DiscoveryServerApplication {
+public class
+AuthServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DiscoveryServerApplication.class, args);
+		SpringApplication.run(AuthServiceApplication.class, args);
 	}
 
 }
