@@ -17,6 +17,10 @@ spring:
               uri: lb://POLICY-SERVICE
               predicates:
                 - Path=/api/policies/**
+            - id: customer-service
+              uri: lb://CUSTOMER-SERVICE
+              predicates:
+                - Path=/api/customers/**, /api/nominee-requests/**
 
 eureka:
   instance:
@@ -27,3 +31,4 @@ eureka:
 
 jwt:
   secret: change-this-to-a-long-random-secret-key-at-least-32-chars
+
