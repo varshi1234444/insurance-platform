@@ -20,6 +20,8 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-
 jwt:
   secret: change-this-to-a-long-random-secret-key-at-least-32-chars
+
+app:
+  encryption-key: 0123456789abcdef0123456789abcdef
