@@ -25,6 +25,10 @@ spring:
               uri: lb://CLAIMS-SERVICE
               predicates:
                 - Path=/api/claims/**
+            - id: loan-service
+              uri: lb://LOAN-SERVICE
+              predicates:
+                - Path=/api/loans/**
 
 eureka:
   instance:

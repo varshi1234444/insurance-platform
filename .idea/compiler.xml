@@ -11,7 +11,17 @@
         <module name="config-server" />
         <module name="discovery-server" />
       </profile>
-      <profile name="Annotation profile for claims-service" enabled="true">
+      <profile name="Annotation profile for loan-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
+        </processorPath>
+        <module name="customer-service" />
+        <module name="loan-service" />
+      </profile>
+      <profile name="Annotation profile for policy-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -19,10 +29,9 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
         </processorPath>
+        <module name="policy-service" />
         <module name="auth-service" />
         <module name="claims-service" />
-        <module name="policy-service" />
-        <module name="customer-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -38,6 +47,7 @@
       <module name="customer-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="discovery-server (1)" options="-parameters" />
+      <module name="loan-service" options="-parameters" />
       <module name="policy-service" options="-parameters" />
     </option>
   </component>
