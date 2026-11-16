@@ -1,5 +1,6 @@
 package com.ashith.insurance.loan_service.service;
 
+import com.ashith.insurance.loan_service.dto.AccountSummary;
 import com.ashith.insurance.loan_service.dto.LoanApplyRequest;
 import com.ashith.insurance.loan_service.dto.LoanDecisionRequest;
 import com.ashith.insurance.loan_service.dto.LoanResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -31,6 +33,7 @@ public class LoanService {
 
     private final LoanRepository loanRepository;
     private final PolicyLookup policyLookup;
+    private final CustomerLookup customerLookup;
     private final LoanTermsResolver termsResolver;
     private final EmiCalculator emiCalculator;
 
@@ -118,6 +121,25 @@ public class LoanService {
 
         loan.setReviewedBy(reviewerEmail);
         loan.setReviewComment(decision.comment());
+        return LoanResponse.from(loanRepository.save(loan));
+    }
+
+    // No @Transactional: the remote call to customer-service must not hold a database
+    // transaction open. The final save is one short transaction, and @Version rejects a
+    // second concurrent disbursement of the same loan.
+    public LoanResponse disburse(Long id, String authorization) {
+        Loan loan = loanRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Loan not found"));
+
+        if (loan.getStatus() != LoanStatus.APPROVED) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Only an approved loan can be disbursed");
+        }
+
+        AccountSummary account = customerLookup.findPrimaryAccount(loan.getCustomerEmail(), authorization);
+
+        loan.setStatus(LoanStatus.DISBURSED);
+        loan.setDisbursedToAccount(account.bankName() + " " + account.maskedAccountNumber());
+        loan.setDisbursedAt(Instant.now());
         return LoanResponse.from(loanRepository.save(loan));
     }
 }

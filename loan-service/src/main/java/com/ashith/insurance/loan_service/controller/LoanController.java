@@ -63,4 +63,11 @@ public class LoanController {
                                @Valid @RequestBody LoanDecisionRequest decision) {
         return loanService.decide(id, authentication.getName(), decision);
     }
+
+    @PutMapping("/{id}/disburse")
+    @PreAuthorize("hasRole('ADMIN')")
+    public LoanResponse disburse(@PathVariable Long id,
+                                 @RequestHeader("Authorization") String authorization) {
+        return loanService.disburse(id, authorization);
+    }
 }

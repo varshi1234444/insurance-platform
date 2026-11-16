@@ -93,6 +93,16 @@ public class BankAccountService {
         bankAccountRepository.delete(account);
     }
 
+    @Transactional(readOnly = true)
+    public BankAccountResponse primaryAccountOf(String customerEmail) {
+        Customer customer = customerRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer profile not found"));
+        return bankAccountRepository.findByCustomerIdAndPrimaryAccountTrue(customer.getId())
+                .map(BankAccountResponse::from)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Customer has no primary bank account"));
+    }
+
     private Customer findCustomer(String email) {
         return customerRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Create your profile first"));

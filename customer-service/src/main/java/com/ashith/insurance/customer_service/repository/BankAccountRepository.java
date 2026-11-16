@@ -14,6 +14,7 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
     List<BankAccount> findByCustomerIdOrderByCreatedAtDesc(Long customerId);
 
     Optional<BankAccount> findByIdAndCustomerId(Long id, Long customerId);
+    Optional<BankAccount> findByCustomerIdAndPrimaryAccountTrue(Long customerId);
 
     boolean existsByCustomerIdAndAccountNumberHash(Long customerId, String accountNumberHash);
 
