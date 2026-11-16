@@ -2,6 +2,7 @@ package com.ashith.insurance.policy_service.dto;
 
 import com.ashith.insurance.policy_service.entity.PolicyType;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 public record PolicyResponse(
@@ -12,5 +13,5 @@ public record PolicyResponse(
         BigDecimal annualPremium,
         BigDecimal coverAmount,
         int termYears,
-        boolean active) {
+        boolean active) implements Serializable {
 }

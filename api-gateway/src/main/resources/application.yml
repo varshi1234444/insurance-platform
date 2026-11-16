@@ -4,11 +4,26 @@ server:
 spring:
   application:
     name: api-gateway
+  data:
+    redis:
+      host: localhost
+      port: 6379
   cloud:
     gateway:
       server:
         webflux:
           routes:
+            - id: auth-login
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/api/auth/login
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    redis-rate-limiter.replenishRate: 1
+                    redis-rate-limiter.burstCapacity: 3
+                    redis-rate-limiter.requestedTokens: 1
+                    key-resolver: "#{@ipKeyResolver}"
             - id: auth-service
               uri: lb://AUTH-SERVICE
               predicates:
@@ -43,4 +58,3 @@ eureka:
 
 jwt:
   secret: change-this-to-a-long-random-secret-key-at-least-32-chars
-

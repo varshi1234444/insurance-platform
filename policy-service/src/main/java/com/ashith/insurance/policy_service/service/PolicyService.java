@@ -7,6 +7,9 @@ import com.ashith.insurance.policy_service.entity.Policy;
 import com.ashith.insurance.policy_service.entity.PolicyType;
 import com.ashith.insurance.policy_service.repository.PolicyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ public class PolicyService {
     private final PolicyRepository policyRepository;
 
     @Transactional
+    @CacheEvict(cacheNames = "policyList", allEntries = true)
     public PolicyResponse create(PolicyRequest request) {
         if (policyRepository.existsByNameIgnoreCase(request.name())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "A policy with this name already exists");
@@ -37,6 +41,8 @@ public class PolicyService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "policyList",
+            key = "(#type == null ? 'ALL' : #type.name()) + ':' + #pageable.pageNumber + ':' + #pageable.pageSize")
     public PageResponse<PolicyResponse> list(PolicyType type, Pageable pageable) {
         Page<Policy> page = (type == null)
                 ? policyRepository.findByActiveTrue(pageable)
@@ -50,11 +56,16 @@ public class PolicyService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "policy", key = "#id")
     public PolicyResponse get(Long id) {
         return toResponse(findActive(id));
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "policy", key = "#id"),
+            @CacheEvict(cacheNames = "policyList", allEntries = true)
+    })
     public PolicyResponse update(Long id, PolicyRequest request) {
         Policy policy = findActive(id);
         boolean nameChanged = !policy.getName().equalsIgnoreCase(request.name());
@@ -71,6 +82,10 @@ public class PolicyService {
     }
 
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "policy", key = "#id"),
+            @CacheEvict(cacheNames = "policyList", allEntries = true)
+    })
     public void deactivate(Long id) {
         Policy policy = findActive(id);
         policy.setActive(false);

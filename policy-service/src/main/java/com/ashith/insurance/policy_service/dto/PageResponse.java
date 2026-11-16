@@ -1,5 +1,6 @@
 package com.ashith.insurance.policy_service.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record PageResponse<T>(
@@ -7,5 +8,5 @@ public record PageResponse<T>(
         int page,
         int size,
         long totalElements,
-        int totalPages) {
+        int totalPages) implements Serializable {
 }

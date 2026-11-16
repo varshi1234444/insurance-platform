@@ -17,21 +17,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
         </processorPath>
-        <module name="policy-service" />
         <module name="auth-service" />
-        <module name="claims-service" />
-      </profile>
-      <profile name="Annotation profile for grievance-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.48/lombok-1.18.48.jar" />
-        </processorPath>
-        <module name="customer-service" />
         <module name="grievance-service" />
+        <module name="claims-service" />
+        <module name="policy-service" />
+        <module name="customer-service" />
         <module name="loan-service" />
       </profile>
     </annotationProcessing>
