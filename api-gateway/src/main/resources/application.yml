@@ -21,6 +21,10 @@ spring:
               uri: lb://CUSTOMER-SERVICE
               predicates:
                 - Path=/api/customers/**, /api/nominee-requests/**, /api/bank-accounts/**
+            - id: claims-service
+              uri: lb://CLAIMS-SERVICE
+              predicates:
+                - Path=/api/claims/**
 
 eureka:
   instance:
